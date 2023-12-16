@@ -1,0 +1,19 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product_services
+    username: postgres
+    password: dikatampan
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+  application:
+    name: PRODUCT-SERVICE
+  config:
+    import: configserver:http://localhost:9296
+
