@@ -17,6 +17,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+
     public long create(ProductRequest productRequest) {
       log.info("Procces to create the product");
         Product product = Product.builder()

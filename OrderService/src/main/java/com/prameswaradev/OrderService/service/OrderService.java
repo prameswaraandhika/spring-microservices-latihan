@@ -1,6 +1,7 @@
 package com.prameswaradev.OrderService.service;
 
 import com.prameswaradev.OrderService.entity.Order;
+import com.prameswaradev.OrderService.external.client.ProductService;
 import com.prameswaradev.OrderService.model.OrderRequest;
 import com.prameswaradev.OrderService.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,10 @@ import java.time.Instant;
 @Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final ProductService productService;
+
     public Long placeOrder(OrderRequest orderRequest) {
+        productService.reduceQuantity(orderRequest.getProductId(), orderRequest.getQuantity());
         Order order = Order.builder()
                 .amount(orderRequest.getTotalAmount())
                 .status("CREATED")
@@ -22,7 +26,7 @@ public class OrderService {
                 .date(Instant.now())
                 .quantity(orderRequest.getQuantity())
                 .build();
-
+        log.info("Order places successfully, data: {}", order);
         return orderRepository.save(order).getId();
     }
 }
