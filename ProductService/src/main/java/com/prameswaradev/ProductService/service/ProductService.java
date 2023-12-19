@@ -1,8 +1,8 @@
 package com.prameswaradev.ProductService.service;
 
 import com.prameswaradev.ProductService.entity.Product;
+import com.prameswaradev.ProductService.exception.InsufficientProducts;
 import com.prameswaradev.ProductService.exception.ProductNotFound;
-import com.prameswaradev.ProductService.exception.ProductSufficientException;
 import com.prameswaradev.ProductService.model.ProductRequest;
 import com.prameswaradev.ProductService.model.ProductResponse;
 import com.prameswaradev.ProductService.repository.ProductRepository;
@@ -37,19 +37,19 @@ public class ProductService {
         return productResponse;
     }
 
-    public void reduceQuantity(Long id, Long quantity) {
+    public void reduceQuantity(Long id, Long newQuantity) {
         log.info("Reduce quantity of product with id {}", id);
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ProductNotFound(String.format("Product with id %d not found", id) ));
-        isSufficient(product.getQuantity(), quantity);
-        product.setQuantity(product.getQuantity() - quantity);
+        isSufficient(product.getQuantity(), newQuantity);
+        product.setQuantity(product.getQuantity() - newQuantity);
         Product productSaved = productRepository.save(product);
-        log.info("Product update sucesfully, data: {}", productSaved);
+        log.info("Product update successfully, data: {}", productSaved);
 
     }
 
-    private void isSufficient(Long quantity, Long newQuantity) {
-        if (quantity < newQuantity)
-            throw new ProductSufficientException("Product doesnt have sufficient quantit");
+    private void isSufficient(Long currentQuantity, Long quantityToCheck) {
+        if (currentQuantity < quantityToCheck)
+            throw new InsufficientProducts("Product doesnt have sufficient quantity");
     }
 }

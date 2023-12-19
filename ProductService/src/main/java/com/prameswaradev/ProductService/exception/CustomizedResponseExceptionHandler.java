@@ -25,4 +25,14 @@ public class CustomizedResponseExceptionHandler extends ResponseEntityExceptionH
                         request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InsufficientProducts.class)
+    public final ResponseEntity<Object> handleInsufficientException(Exception ex, WebRequest request) throws Exception {
+        ExceptionResponse exceptionResponse =
+                new ExceptionResponse(
+                        LocalDateTime.now(),
+                        ex.getMessage(),
+                        request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INSUFFICIENT_STORAGE);
+    }
 }
